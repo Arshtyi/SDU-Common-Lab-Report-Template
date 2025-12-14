@@ -27,16 +27,15 @@
 )
 
 #let report(
+    partner: "                           ",
+    student-name: "                              ",
+    student-grade: "                           ",
+    student-group: "                                ",
+    course: "                              ",
+    lab-title: "                                                                       ",
+    lab-date: datetime.today(),
+    tool-group: "                       ",
     logo: none,
-    // logo-width: 2cm,
-    partner: "BHX",
-    student-name: "Arshtyi",
-    grade: "大一",
-    group: "01",
-    course: "大学物理实验",
-    lab-title: "实验题目",
-    date: datetime.today(),
-    tool-group: "01",
     body,
 ) = {
     set text(
@@ -57,12 +56,15 @@
             }
         ],
     )
+
     set document(title: lab-title, author: student-name)
+
     set heading(
         numbering: numbly(
             none,
             "{2:1}.",
-            "({3:1})", // here, we only want the 3rd level
+            "({3:1})",
+            none,
         ),
     )
     set par(justify: true)
@@ -127,28 +129,51 @@
         ),
         full: true,
     )
-    counter(page).update(1)
 
+    // Math equation numbering.Ref:https://guide.typst.dev/FAQ/math-equation
+    let ct = counter("eq")
+    set math.equation(numbering: it => ct.display("(1-1.a)"))
+    show heading.where(level: 1): it => it + ct.step() + ct.step(level: 2)
+    show math.equation.where(block: true): it => {
+        it
+        if it.numbering != none {
+            if ct.get().len() == 2 {
+                ct.step(level: 2)
+            }
+        }
+    }
+    let eq_nonum(body) = {
+        set math.equation(numbering: none)
+        body
+    }
+    let subeqs(..args) = {
+        for eq in args.pos() {
+            ct.step(level: 3)
+            eq
+        }
+        ct.step(level: 2)
+    }
+
+    // First line contains logo, title and date.
     [
         #set text(tracking: 0.1em)
         #grid(
             columns: (1fr, 4fr, 2fr),
             align: center + horizon,
             box(height: 10%, logo),
-            underline(text("山东大学实验报告", size: 20pt)),
-            underline(text(date.display("[year]年[month]月[day]日"), size: 12pt)),
+            // box(text("山东大学实验报告", size: 20pt), baseline: -5pt, width: 1fr, stroke: (bottom: .5pt)), // Maybe this method is not good.
+            box(width: 100%, underline(text("    山东大学实验报告    ", size: 20pt))),
+            underline(text(lab-date.display("   [year] 年 [month] 月 [day] 日   "), size: 12pt)),
         )
     ]
 
     show heading: set block(spacing: 1.5em)
     // show heading: set block(above: 1.4em, below: 1em)
-
     show heading.where(depth: 1): it => {
         show h.where(amount: 0.3em): none
         set text(size: 字号.小四)
         it
     }
-
     show heading: it => {
         set text(size: 字号.小四)
         it
@@ -189,13 +214,15 @@
     show table: it => it + fakepar // 表格后缩进
     show raw.where(block: true): it => it + fakepar
 
+    // Second line contains student-name, student-grade, student-group, partner.
+    // Third line contains course, lab-title, tool-group.
     [
         #set text(size: 字号.小四)
         #grid(
             columns: (1fr, 1fr, 1fr, 1fr),
             text("姓名" + underline(student-name)),
-            text("系年级" + underline(grade)),
-            text("组别" + underline(group)),
+            text("系年级" + underline(student-grade)),
+            text("组别" + underline(student-group)),
             text("同组者" + underline(partner)),
         )
         #v(1em, weak: true)
