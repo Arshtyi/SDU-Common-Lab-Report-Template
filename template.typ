@@ -27,14 +27,14 @@
 )
 
 #let report(
-    partner: "                           ",
-    student-name: "                              ",
-    student-grade: "                           ",
-    student-group: "                                ",
-    course: "                              ",
-    lab-title: "                                                                       ",
+    partner: "",
+    student-name: "",
+    student-grade: "",
+    student-group: "",
+    course: "",
+    lab-title: "",
     lab-date: datetime.today(),
-    tool-group: "                       ",
+    tool-group: "",
     logo: none,
     body,
 ) = {
@@ -154,6 +154,8 @@
         ct.step(level: 2)
     }
 
+    let underln(width, body) = box(align(center, body), width: width, stroke: (bottom: 0.5pt), outset: (bottom: 2pt))
+
     // First line contains logo, title and date.
     [
         #set text(tracking: 0.1em)
@@ -162,8 +164,8 @@
             align: center + horizon,
             box(height: 10%, logo),
             // box(text("山东大学实验报告", size: 20pt), baseline: -5pt, width: 1fr, stroke: (bottom: .5pt)), // Maybe this method is not good.
-            box(width: 100%, underline(text("    山东大学实验报告    ", size: 20pt))),
-            underline(text(lab-date.display("   [year] 年 [month] 月 [day] 日   "), size: 12pt)),
+            underln(25em)[#text("山东大学实验报告", size: 20pt)],
+            underln(10em)[#text(lab-date.display("[year]年[month]月[day]日"))],
         )
     ]
 
@@ -220,17 +222,17 @@
         #set text(size: 字号.小四)
         #grid(
             columns: (1fr, 1fr, 1fr, 1fr),
-            text("姓名" + underline(student-name)),
-            text("系年级" + underline(student-grade)),
-            text("组别" + underline(student-group)),
-            text("同组者" + underline(partner)),
+            text("姓名" + underln(7em)[#student-name]),
+            text("系年级" + underln(7em)[#student-grade]),
+            text("组别" + underln(7em)[#student-group]),
+            text("同组者" + underln(7em)[#partner]),
         )
         #v(1em, weak: true)
         #grid(
             columns: (1fr, 2fr, 1fr),
-            text("科目" + underline(course)),
-            text("题目" + underline(lab-title)),
-            text("仪器编号" + underline(tool-group)),
+            text("科目" + underln(7em)[#course]),
+            text("题目" + underln(17em)[#lab-title]),
+            text("仪器编号" + underln(6em)[#tool-group]),
         )
     ]
 

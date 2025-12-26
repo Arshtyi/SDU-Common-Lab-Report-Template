@@ -8,14 +8,14 @@ A **unofficial** SDU common lab report.
 #import "@preview/unofficial-sdu-lab-report:0.1.0": *
 
 #show: report.with(
-    partner: "",
-    student-name: "",
-    student-grade: "",
-    student-group: "",
-    course: "",
-    lab-title: "",
+    partner: "QM",
+    student-name: "Arshtyi",
+    student-grade: "1",
+    student-group: "1",
+    course: "YuGiOh!",
+    lab-title: "Pendulum Summon",
     lab-date: datetime.today(),
-    tool-group: "",
+    tool-group: "1",
     logo: image("sdu.png"),
 )
 ```
